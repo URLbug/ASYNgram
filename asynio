@@ -3,10 +3,8 @@ import sys
 
 from vendro import commands
 
-def main() -> None:
+def make(args: list[str]) -> None:
     make = commands.Make()
-
-    args = sys.argv
 
     if 'make:handler' == args[1]:
         make.handler(args[2])
@@ -16,6 +14,21 @@ def main() -> None:
         make.button(args[2])
     elif 'make:state' == args[1]:
         make.state(args[2])
-        
+    elif 'make:migrate' == args[1]:
+        make.migrate(args[2])
+
+def migrate(args: list[str]) -> None:
+    migrate = commands.Migrate()
+
+    if 'migrate' == args[1]:
+        migrate.create_table()
+    elif 'migrate:drop' == args[1]:
+        migrate.drop_table()
+
+def main() -> None:
+    args = sys.argv
+
+    make(args)
+
 if __name__ == '__main__':
     main()

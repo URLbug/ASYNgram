@@ -105,5 +105,21 @@ class Make:
                         )
 
         print("Create state: " + name)
+    
+    def state(self, name) -> None:
+        code = (
+            'from tables import Table\n'
+            '\n'
+            f'class {name.title()}(Table):\n'
+            f'   __tablename__ = {name}'
+            )
+        
+        self.full_write(name, 
+                        './src/database',
+                        code,
+                        'A table with the same name already exists'
+                        )
+
+        print("Create table: " + name)
 
 
