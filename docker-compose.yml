@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  python:
+    build:
+      context: src
+      dockerfile: Dockerfile
+    
+    entrypoint: ["python3"]
+  
+  postgres:
+
+  mysql:
+
+  redis:
+  

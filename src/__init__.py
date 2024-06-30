@@ -11,4 +11,3 @@ if os.path.exists(dotenv_path):
 
 # Bot conn
 bot = Bot(os.getenv('TOKEN'))
-
