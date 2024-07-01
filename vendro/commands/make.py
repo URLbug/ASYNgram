@@ -90,7 +90,7 @@ class Make:
 
         print("Create button: " + name)
     
-    def state(self, name) -> None:
+    def state(self, name: str) -> None:
         code = (
             'from aiogram.fsm.state import State, StatesGroup\n'
             '\n'
@@ -106,12 +106,15 @@ class Make:
 
         print("Create state: " + name)
     
-    def state(self, name) -> None:
+    def migrate(self, name: str) -> None:
         code = (
-            'from tables import Table\n'
+            'from .tables import Table\n'
+            'from vendro.commands import migrate\n'
             '\n'
-            f'class {name.title()}(Table):\n'
-            f'   __tablename__ = {name}'
+            f'class {name.title()}(Table, migrate.Base):\n'
+            f'   __tablename__ = "{name}s"\n'
+            '\n'
+            '    id = Column(BigInteger, primary_key=True)'
             )
         
         self.full_write(name, 

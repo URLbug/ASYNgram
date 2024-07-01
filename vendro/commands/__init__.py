@@ -1,2 +1,2 @@
 from .make import Make
-from .migrate import Migrate
+from .migrate import migrate

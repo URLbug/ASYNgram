@@ -3,3 +3,5 @@ python-dotenv==1.0.1
 SQLAlchemy==2.0.29
 SQLAlchemy_Utils==0.41.2
 asyncpg==0.29.0
+asyncmy==0.2.9
+art==6.2

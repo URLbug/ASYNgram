@@ -1,28 +1,28 @@
 from sqlalchemy import insert, delete, update
 
-from vendro.commands import Migrate
+from vendro.commands import migrate
 
 class Table:
     __tablename__ = 'tables'
 
-    session = Migrate().session
+    session = migrate.session()
 
     @classmethod
-    def insert_data(self, **kwargs) -> None:
+    async def insert_data(self, **kwargs) -> None:
         ins = insert(self).values(**kwargs)
 
-        self.session.execute(ins)
+        await self.session.execute(ins)
     
     @classmethod
-    def delete_data(self, operator: bool) -> None:
-        self.session.execute(delete(self).where(operator))
+    async def delete_data(self, operator: bool) -> None:
+        await self.session.execute(delete(self).where(operator))
     
     @classmethod
-    def update_data(self, operator: bool, **kwargs) -> None:
+    async def update_data(self, operator: bool, **kwargs) -> None:
         upd = update(self)
 
         upd = upd.where(operator)
         
         upd = upd.values(**kwargs)
 
-        self.session.execute(upd)
+        await self.session.execute(upd)

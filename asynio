@@ -1,8 +1,23 @@
 #!/bin/python3
 import sys
 import asyncio
+import art
 
+from src.database import *
 from vendro import commands
+
+def help() -> None:
+    print(art.text2art('ASYNCgram'))
+    print('All commands:')
+    print()
+    print((
+        'make commands:\n'
+        'make:handler - create class handler in your project\n'
+        'make:filter - create class filter in your project\n'
+        'make:button - create class button in your project\n'
+        'make:state - create class state in your project\n'
+        'make:migrate - create class table in your project\n'
+    ))
 
 def make(args: list[str]) -> None:
     make = commands.Make()
@@ -19,7 +34,7 @@ def make(args: list[str]) -> None:
         make.migrate(args[2])
 
 def migrate(args: list[str]) -> None:
-    migrate = commands.Migrate()
+    migrate = commands.migrate
 
     if 'migrate' == args[1]:
         asyncio.run(migrate.create_table())
@@ -28,6 +43,9 @@ def migrate(args: list[str]) -> None:
 
 def main() -> None:
     args = sys.argv
+
+    if args[1] == 'help':
+        help()
 
     make(args)
     migrate(args)

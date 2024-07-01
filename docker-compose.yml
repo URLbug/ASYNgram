@@ -4,6 +4,8 @@ services:
   python:
     build:
       dockerfile: Dockerfile
+    volumes:
+      - ./:/app
     networks:
       - asyncgram
     depends_on:
@@ -19,14 +21,14 @@ services:
     volumes:
       - pgsql_data:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
     networks:
       - asyncgram
 
   mysql:
     image: mariadb
     ports:
-      - "3310:3306"
+      - "3306:3306"
     restart: unless-stopped
     tty: true
     env_file: ./config/mysql.env
