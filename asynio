@@ -1,5 +1,6 @@
 #!/bin/python3
 import sys
+import asyncio
 
 from vendro import commands
 
@@ -21,14 +22,15 @@ def migrate(args: list[str]) -> None:
     migrate = commands.Migrate()
 
     if 'migrate' == args[1]:
-        migrate.create_table()
+        asyncio.run(migrate.create_table())
     elif 'migrate:drop' == args[1]:
-        migrate.drop_table()
+        asyncio.run(migrate.drop_table())
 
 def main() -> None:
     args = sys.argv
 
     make(args)
+    migrate(args)
 
 if __name__ == '__main__':
     main()

@@ -1,9 +1,9 @@
 import os
+import __init__
 
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import MetaData, Engine
-from sqlalchemy import create_engine
-from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy.ext.asyncio import create_async_engine
 from sqlalchemy.orm import sessionmaker
 
 class Migrate:
@@ -18,23 +18,30 @@ class Migrate:
         self.session = Session()
     
     def connect(self) -> Engine:
+        TYPE = os.getenv('TYPE_DATABASE')
         USERNAME = os.getenv('USERNAME_DATABASE')
         PASSWORD = os.getenv('PASSWORD_DATABASE')
         HOST = os.getenv('HOST_DATABASE')
         PORT = os.getenv('PORT_DATABASE')
         DATABASE = os.getenv('DATABASE')
 
-        URL = f'postgresql+psycopg2://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
+        if TYPE == 'pgsql':
+            URL = f'postgresql+asyncpg://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
+        else:
+            URL = f'mysql+aiomysql://{USERNAME}:{PASSWORD}@{HOST}:{PORT}/{DATABASE}'
 
-        engine = create_engine(URL)
-
-        if not database_exists(engine.url):
-            create_database(engine.url)
+        engine = create_async_engine(URL)
 
         return engine
 
-    def create_table(self) -> None:
-        self.Base.metadata.create_all(self.engine)
+    async def create_table(self) -> None:
+        async with self.engine.begin() as conn:
+            await conn.run_sync(self.Base.metadata.create_all)
+        
+        print('Tables create!')
 
-    def drop_table(self) -> None:
-        self.Base.metadata.drop_all(self.engine)
+    async def drop_table(self) -> None:
+        async with self.engine.begin() as conn:
+            await conn.run_sync(self.Base.metadata.drop_all)
+        
+        print('Tables drop!')

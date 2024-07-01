@@ -3,14 +3,44 @@ version: '3.8'
 services:
   python:
     build:
-      context: src
       dockerfile: Dockerfile
-    
+    networks:
+      - asyncgram
+    depends_on:
+      - postgres
+      - mysql
     entrypoint: ["python3"]
   
   postgres:
+    image: postgres
+    env_file: ./config/pgsql.env
+    restart: unless-stopped
+    tty: true
+    volumes:
+      - pgsql_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - asyncgram
 
   mysql:
+    image: mariadb
+    ports:
+      - "3310:3306"
+    restart: unless-stopped
+    tty: true
+    env_file: ./config/mysql.env
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - asyncgram
 
-  redis:
-  
+networks:
+  asyncgram:
+    driver: bridge
+
+volumes:
+  pgsql_data:
+    driver: local
+  mysql_data:
+    driver: local

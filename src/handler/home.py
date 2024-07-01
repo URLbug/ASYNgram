@@ -2,7 +2,7 @@ from aiogram import Router
 from aiogram.types import Message
 from aiogram.filters import CommandStart
 
-from filter import Myfilter
+from src.filter import Myfilter
 
 class Home:
     router = Router(name=__name__)

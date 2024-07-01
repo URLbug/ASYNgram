@@ -5,11 +5,8 @@ from aiogram import Dispatcher
 
 from __init__ import bot
 
-import sys
+import src.handler as handler
 
-sys.path.append('..')
-
-from handler import *
 
 logging.basicConfig(format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -17,7 +14,9 @@ logger = logging.getLogger(__name__)
 async def main() -> None:
     dp = Dispatcher()
 
-    dp.include_routers(Home.router)
+    for han in vars(handler).values(): 
+        if callable(han):
+            dp.include_router(han.router)
 
     await bot.delete_webhook(drop_pending_updates=True)
     await dp.start_polling(bot)
