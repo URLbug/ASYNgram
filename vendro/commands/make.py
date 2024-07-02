@@ -3,14 +3,25 @@ import os
 
 class Make:
     def write(self, name: str, code: str) -> None:
+        if '/' in name:
+            os.makedirs(os.path.dirname(name), exist_ok=True)
+
         with open(f'{name}.py', 'w') as file:
             file.write(code)
 
             file.close()
     
     def writeInit(self, name: str) -> None:
+        if '/' in name:
+             name = name.replace('/', '.')
+
         with open('__init__.py', 'a') as file:
-            file.write(f'from .{name} import {name.title()}\n')
+            if '.' in name:
+                tilte = name.split('.')[-1].title()
+            else:
+                tilte = name.title()
+
+            file.write(f'from .{name} import {tilte}\n')
 
             file.close()
     
@@ -125,4 +136,23 @@ class Make:
 
         print("Create table: " + name)
 
+    def unit(self, name: str) -> None:
+        code = (
+            'import unittest\n'
+            'import asyncio\n'
+            '\n'
+            'from unittest.mock import AsyncMock\n'
+            '\n'
+            f'class {name.title()}Test(unittest.TestCase):\n'
+            f'   def test_{name}(self):\n'
+            '       pass\n'
+            )
+        
+        self.full_write(f'{name}_test', 
+                        './src/unit',
+                        code,
+                        'A unittest with the same name already exists'
+                        )
+
+        print("Create unittest: " + name)
 

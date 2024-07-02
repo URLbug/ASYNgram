@@ -32,6 +32,8 @@ def make(args: list[str]) -> None:
         make.state(args[2])
     elif 'make:migrate' == args[1]:
         make.migrate(args[2])
+    elif 'make:test' == args[1]:
+        make.unit(args[2])
 
 def migrate(args: list[str]) -> None:
     migrate = commands.migrate
