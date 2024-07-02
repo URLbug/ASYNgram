@@ -22,9 +22,11 @@ class Migrate:
             expire_on_commit=False
         )
         
-    async def session(self) -> AsyncSession:
-        async with self.__Session() as session:
-            yield session
+    async def session(self, q) -> AsyncSession:
+        async with self.__Session() as sess:
+            await sess.execute(q)
+
+            await sess.commit()
     
     def __connect(self) -> Engine:
         TYPE = os.getenv('TYPE_DATABASE')
@@ -50,5 +52,7 @@ class Migrate:
     async def drop_table(self) -> None:
         async with self.__engine.begin() as conn:
             await conn.run_sync(self.Base.metadata.drop_all)
+        
+        
 
 migrate = Migrate()

@@ -119,6 +119,8 @@ class Make:
     
     def migrate(self, name: str) -> None:
         code = (
+            'from sqlalchemy import Column, BigInteger\n'
+            '\n'
             'from .tables import Table\n'
             'from vendro.commands import migrate\n'
             '\n'
